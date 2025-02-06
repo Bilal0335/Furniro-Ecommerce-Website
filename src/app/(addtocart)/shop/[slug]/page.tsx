@@ -222,7 +222,6 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
   return (
     <div className="mt-52 mb-40">
       <div>
-        <h1>SlugPage</h1>
         <div>
           <Image src={items.image[0]} alt="image" width={100} height={100} />
           <Image src={items.image[0]} alt="image" width={100} height={100} />
@@ -234,6 +233,25 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
         <div>
           <h1>{items.title}</h1>
           <p>{stars}</p>
+          <div>
+            <span className="font-bold">Price: {items.price}</span>
+            <span className="font-bold line-through text-gray-500">
+              {items.discount}
+            </span>
+          </div>
+          <p>{items.description}</p>
+          <p className="text-gray-400">Selct Color</p>
+          <div className="space-x-3">
+            <button className="w-[37px] h-[37px] rounded-full bg-red-400"></button>
+            <button className="w-[37px] h-[37px] rounded-full bg-blue-400"></button>
+            <button className="w-[37px] h-[37px] rounded-full bg-yellow-400"></button>
+          </div>
+          <p className="text-gray-400">Selct Size</p>
+          <div className="space-x-3">
+            <button className="w-[70px] h-[37px] rounded-[16px] bg-gray-500">XL</button>
+            <button className="w-[70px] h-[37px] rounded-[16px] bg-gray-500">L</button>
+            <button className="w-[70px] h-[37px] rounded-[16px] bg-gray-500">XS</button>
+          </div>
         </div>
       </div>
     </div>
