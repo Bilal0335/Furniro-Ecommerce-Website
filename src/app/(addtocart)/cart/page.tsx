@@ -1,31 +1,18 @@
 "use client";
-import { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image"; // If you need to use this
 import React from "react";
 import { useSelector } from "react-redux";
 import Cartpage from "./cartpage";
 import { Button } from "@/components/ui/button";
-interface Icart {
-  id: number; // Product ka unique identifier
-  title: string; // Product ka title ya name
-  image?: string[] | StaticImageData | string; // Product ki images
-  slug: string; // URL-friendly unique identifier for the product
-  price: number; // Product ki price
-  size: string[]; // Product ke available sizes
-  color: string[]; // Product ke available colors
-  qty: number; // Available quantity of the product
-  discount?: number; // Discount on product (optional)
-  uuid: string | number | undefined;
-}
 
 interface CartItem {
   price: number;
   discount: number;
   qty: number;
+  image: StaticImageData; // If you're handling image data for items in the cart
 }
 
 function Cart() {
-  // formula
-
   const cartArray: CartItem[] = useSelector(
     (state: { cart: CartItem[] }) => state.cart
   );
@@ -39,7 +26,7 @@ function Cart() {
   }, 0);
 
   return (
-    <div className=" mt-24 flex flex-col lg:flex-row justify-around items-center lg:items-start">
+    <div className="mt-24 flex flex-col lg:flex-row justify-around items-center lg:items-start">
       <Cartpage />
       {/* Order Summary */}
       <div className="bg-white p-4 w-[90%] lg:w-[500px] border rounded-[20px] mt-5 lg:mt-0">

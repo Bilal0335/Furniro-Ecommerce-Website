@@ -1,12 +1,10 @@
 import React from "react";
 import Image from "next/image";
-import { IoIosArrowForward } from "react-icons/io";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoTime } from "react-icons/io5";
 import { FaLocationDot } from "react-icons/fa6";
 import ContactImage from "../../../../public/image/contactImage.png";
-import LogoImage from "../../../../public/logo.png";
-// import Services from "../components/Services";
+
 
 const Contact = () => {
   return (
@@ -83,7 +81,6 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Box 2 - Contact Form */}
           {/* Box 2 - Contact Form */}
           <div className="w-full md:w-1/2">
             <form className="p-8 rounded-lg">

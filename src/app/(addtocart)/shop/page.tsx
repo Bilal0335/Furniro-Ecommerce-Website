@@ -64,10 +64,10 @@ const stars = "⭐⭐⭐⭐⭐"; // Define the stars variable
 const ProductPage = () => {
   return (
     <div className="mt-28 px-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-16 mb-7">
         {products.map((item) => {
           return (
-            <div key={item.id} className="bg-white p-4 shadow-lg rounded-lg">
+            <div key={item.id} className="bg-white p-4 shadow-lg rounded-lg ">
               <Link href={`/shop/${item.slug}`}>
                 {item.image && Array.isArray(item.image) && (
                   <Image

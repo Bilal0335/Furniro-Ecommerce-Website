@@ -6,7 +6,14 @@ import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import { Button } from "./ui/button";
 
-function Toastity({ cartItem }: any) {
+// Assuming IProduct is the correct type for cartItem
+import { IProduct } from "@/app/utils/Types";
+
+interface ToastityProps {
+  cartItem: IProduct; // Specify the type of cartItem
+}
+
+function Toastity({ cartItem }: ToastityProps) {
   const dispatch = useDispatch();
   const notify = () =>
     toast.success("Product added Successfully", {
@@ -18,8 +25,9 @@ function Toastity({ cartItem }: any) {
       draggable: true,
       progress: undefined,
       theme: "light",
-      transition: Bounce
+      transition: Bounce,
     });
+
   return (
     <>
       <div onClick={() => dispatch(addtocart(cartItem))}>

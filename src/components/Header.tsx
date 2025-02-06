@@ -3,15 +3,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-// import { MdOutlineAccountCircle } from "react-icons/md";
 import { IoCartOutline, IoSearchOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { SheetSide } from "./Humburger";
 import { IoIosHeartEmpty } from "react-icons/io";
 
+// Define the type for an item in the cart
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
 // Redux state type
 interface RootState {
-  cart: any[]; // Update this to match your actual Redux cart state type
+  cart: CartItem[]; // Update to the actual type of items in your cart
 }
 
 export default function Header() {

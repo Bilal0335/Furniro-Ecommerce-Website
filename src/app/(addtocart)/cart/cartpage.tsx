@@ -1,22 +1,35 @@
 import { AiFillDelete } from "react-icons/ai";
-
 import Image from "next/image";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Minus, Plus } from "lucide-react";
 import { addition, delItem, subraction } from "../Redux/features/cartSlice";
 
+// Define a type for the items in the cart
+interface CartItem {
+  uuid: string;
+  title: string;
+  image: string[];
+  size: string[];
+  color: string[];
+  price: number;
+  discount: number;
+  qty: number;
+}
+
 function Cartpage() {
-  const cartItem = useSelector((state: any) => state.cart);
+  // Specify the correct type for cartItem state
+  const cartItem = useSelector((state: { cart: CartItem[] }) => state.cart);
   const dispatch = useDispatch();
+
   return (
     <div>
       {cartItem.length >= 1 &&
-        cartItem.map((items: any, i: any) => {
+        cartItem.map((items: CartItem, i: number) => {
           return (
             <div
               key={i}
-              className="flex  lg:w-[650px] p-4 rounded-[16px] border  justify-between"
+              className="flex lg:w-[650px] p-4 rounded-[16px] border justify-between"
             >
               <div className="flex">
                 <Image
@@ -24,11 +37,10 @@ function Cartpage() {
                   alt={items.title}
                   width={100}
                   height={100}
-                ></Image>
+                />
                 <div className="flex flex-col ml-3">
-                  <span>Size:{items.size[0]}</span>
-                  <span>Color:{items.color[0]}</span>
-                  {/* <span>${items.price}</span> */}
+                  <span>Size: {items.size[0]}</span>
+                  <span>Color: {items.color[0]}</span>
                   <p className="font-bold" key={i}>
                     $
                     {items.discount > 0
@@ -39,12 +51,10 @@ function Cartpage() {
                 </div>
               </div>
               <div className="relative">
-                {/* btn */}
                 <button onClick={() => dispatch(delItem(items.uuid))}>
                   <AiFillDelete className="text-red-500 cursor-pointer absolute right-2 top-0" />
                 </button>
-                {/* INcreament decreament */}
-                <div className="flex justify-start items-center pt-10 ">
+                <div className="flex justify-start items-center pt-10">
                   <button
                     onClick={() => dispatch(subraction(items))}
                     className="w-10"
