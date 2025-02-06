@@ -5,7 +5,6 @@ import { IoTime } from "react-icons/io5";
 import { FaLocationDot } from "react-icons/fa6";
 import ContactImage from "../../../../public/image/contactImage.png";
 
-
 const Contact = () => {
   return (
     <div>

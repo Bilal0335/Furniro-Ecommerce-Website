@@ -1,5 +1,5 @@
 "use client";
-import { StaticImageData } from "next/image"; // If you need to use this
+import { StaticImageData } from "next/image"; 
 import React from "react";
 import { useSelector } from "react-redux";
 import Cartpage from "./cartpage";
