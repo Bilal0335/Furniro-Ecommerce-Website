@@ -4,8 +4,22 @@ export interface Product {
     imageUrl: string;
     price: number;
     slug: string;
-    dicountPercentage?: number; // Optional (if some products don't have a discount)
-    isNew?: boolean; // Optional (if some products don't have this field)
+    dicountPercentage?: number;
+    isNew?: boolean; 
     title:string
   }
   
+export type IProduct = {
+  _id: string;
+  title: string;
+  slug: string;
+  price: number;
+  description: string;
+  category?: string;
+  isNew?: boolean;
+  size?: string[];
+  color?: string[];
+  qty?: number;
+  dicountPercentage?: number;
+  imageUrl: string;
+};
