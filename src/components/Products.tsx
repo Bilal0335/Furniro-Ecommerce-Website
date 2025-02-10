@@ -25,6 +25,26 @@ function ProductSection() {
   const [products, setProducts] = useState<Product[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [noOfElements, setNoOfElements] = useState(4);
+  const [isComplete, setIsComplete] = useState(false);
+
+  const slice = products.slice(0, noOfElements);
+
+  // Load More function
+  const loadMore = () => {
+    if (noOfElements + 4 >= products.length) {
+      setNoOfElements(products.length);
+      setIsComplete(true);
+    } else {
+      setNoOfElements((prev) => prev + 4);
+    }
+  };
+
+  // Show Less function
+  const showLess = () => {
+    setNoOfElements(4);
+    setIsComplete(false);
+  };
 
   useEffect(() => {
     getData().then((data) => {
@@ -39,7 +59,7 @@ function ProductSection() {
         Our Products
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
-        {products.map((product, index) => (
+        {slice.map((product, index) => (
           <div
             key={index}
             className="relative bg-gray-50 p-3 rounded-lg hover:shadow-xl"
@@ -103,10 +123,25 @@ function ProductSection() {
         ))}
       </div>
 
-      <div className="flex justify-center items-center mt-10 mx-auto">
-        <button className="text-white px-4 py-2 rounded-md text-lg font-bold bg-yellow-600 hover:bg-yellow-800 mx-auto">
-          Show More
-        </button>
+      {/* Show More & Show Less Buttons */}
+      <div className="flex justify-center items-center mt-10 mx-auto gap-4">
+        {!isComplete && noOfElements < products.length && (
+          <button
+            className="text-white px-4 py-2 rounded-md text-lg font-bold bg-yellow-600 hover:bg-yellow-800"
+            onClick={loadMore}
+          >
+            Show More
+          </button>
+        )}
+
+        {isComplete && (
+          <button
+            className="text-white px-4 py-2 rounded-md text-lg font-bold bg-yellow-600 hover:bg-yellow-800"
+            onClick={showLess}
+          >
+            Show Less
+          </button>
+        )}
       </div>
     </div>
   );
