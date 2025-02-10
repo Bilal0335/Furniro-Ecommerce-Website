@@ -1,11 +1,11 @@
-import { createClient } from '@sanity/client';
+import { createClient } from "@sanity/client";
 
 const client = createClient({
-  projectId: '7hg9v40m',
-  dataset: 'production',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: "production",
   useCdn: true,
-  apiVersion: 'v2025-02-09',
-  token: 'skTcIEzfMFLiz5sbESmxJc1yNAwRvPpfFea04lhmhmuASxjfAIhpa7896wmoZcg7ycL4VWP8xUXSLgc7wFpH85bl1S6cM8tH2MajScDd0uKpxKjBPhTXrdRYmC2iOzmjjDmwLSNRmdciVMI1QUc7WADZgVac1iKvyDzWvdGOlEvTocL9CJXN',
+  apiVersion: "v2025-02-09",
+  token: process.env.SANITY_TOKEN_ACCESS
 });
 
 async function uploadImageToSanity(imageUrl) {
@@ -20,14 +20,14 @@ async function uploadImageToSanity(imageUrl) {
     const buffer = await response.arrayBuffer();
     const bufferImage = Buffer.from(buffer);
 
-    const asset = await client.assets.upload('image', bufferImage, {
-      filename: imageUrl.split('/').pop(),
+    const asset = await client.assets.upload("image", bufferImage, {
+      filename: imageUrl.split("/").pop()
     });
 
     console.log(`Image uploaded successfully: ${asset._id}`);
     return asset._id;
   } catch (error) {
-    console.error('Failed to upload image:', imageUrl, error);
+    console.error("Failed to upload image:", imageUrl, error);
     return null;
   }
 }
@@ -38,46 +38,53 @@ async function uploadProduct(product) {
 
     if (imageId) {
       const document = {
-        _type: 'product',
+        _type: "product",
         title: product.title,
         price: product.price,
         productImage: {
-          _type: 'image',
+          _type: "image",
           asset: {
-            _ref: imageId,
-          },
+            _ref: imageId
+          }
         },
         tags: product.tags,
         dicountPercentage: product.dicountPercentage, // Typo in field name: dicountPercentage -> discountPercentage
         description: product.description,
-        isNew: product.isNew,
+        isNew: product.isNew
       };
 
       const createdProduct = await client.create(document);
-      console.log(`Product ${product.title} uploaded successfully:`, createdProduct);
+      console.log(
+        `Product ${product.title} uploaded successfully:`,
+        createdProduct
+      );
     } else {
-      console.log(`Product ${product.title} skipped due to image upload failure.`);
+      console.log(
+        `Product ${product.title} skipped due to image upload failure.`
+      );
     }
   } catch (error) {
-    console.error('Error uploading product:', error);
+    console.error("Error uploading product:", error);
   }
 }
 
 async function importProducts() {
   try {
-    const response = await fetch('https://template6-six.vercel.app/api/products');
-    
+    const response = await fetch(
+      "https://template6-six.vercel.app/api/products"
+    );
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    
+
     const products = await response.json();
 
     for (const product of products) {
       await uploadProduct(product);
     }
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error("Error fetching products:", error);
   }
 }
 

@@ -27,6 +27,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.4.0",
+    "react-read-more-read-less": "^1.0.7",
     "react-redux": "^9.2.0",
     "react-toastify": "^11.0.3",
     "redux-persist": "^6.0.0",

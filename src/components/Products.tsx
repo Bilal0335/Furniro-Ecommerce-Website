@@ -1,30 +1,37 @@
 "use client";
-import Image1 from "../../public/image/image-1.png";
-import Image2 from "../../public/image/image-2.png";
-import Image3 from "../../public/image/image-3.png";
-import Image4 from "../../public/image/image-4.png";
-import Image5 from "../../public/image/image-5.png";
-import Image6 from "../../public/image/image-6.png";
-import Image7 from "../../public/image/image-7.png";
-import Image8 from "../../public/image/image-8.png";
+import { client } from "@/sanity/lib/client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CiHeart, CiShare2, CiSliderHorizontal } from "react-icons/ci";
+import { Product } from "@/app/interface";
+
+async function getData() {
+  const query = `  
+  *[_type=="product"]{  
+    description,  
+    "imageUrl":productImage.asset->url,  
+    price,  
+    _id,  
+    'slug':slug.current,  
+    dicountPercentage,  
+    isNew,  
+    title  
+  }  
+  `;
+  return await client.fetch(query);
+}
 
 function ProductSection() {
-  // UseState typed as 'number | null' for hovered index
+  const [products, setProducts] = useState<Product[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    { name: "Sytherine", description: "Stylish cafe chair", price: "Rp 2.500.000", image: Image1 },
-    { name: "Chair", description: "Will Executive chair", price: "Rp 1.500.000", image: Image2 },
-    { name: "Lotto", description: "Luxury big sofa", price: "Rp 7.000.000", image: Image3 },
-    { name: "Respirs", description: "Outdoor bar table and stool", price: "Rp 5.000.000", image: Image4 },
-    { name: "Grifo", description: "Night lamp", price: "Rp 1.500.000", image: Image5 },
-    { name: "Muggo", description: "Small mug", price: "Rp 1.500.000", image: Image6 },
-    { name: "Pingky", description: "Cute bed set", price: "Rp 7.000.000", image: Image7 },
-    { name: "Potty", description: "Minimalist flower pot", price: "Rp 500.000", image: Image8 }
-  ];
+  useEffect(() => {
+    getData().then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
+  }, []);
 
   return (
     <div className="p-2 px-10 rounded-lg">
@@ -33,23 +40,29 @@ function ProductSection() {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
         {products.map((product, index) => (
-          <div key={index} className="relative bg-gray-50 p-4 rounded-lg hover:shadow-xl">
-            
-            {/* Image wrapper with hover effect */}
-            <div 
-              className="relative"
+          <div
+            key={index}
+            className="relative bg-gray-50 p-3 rounded-lg hover:shadow-xl"
+          >
+            <div
+              className="relative w-full h-60"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={300}
-                height={300}
-                className="w-full h-60 object-cover mb-4 rounded-lg"
-              />
+              {loading ? (
+                <div className="w-full h-60 bg-gray-200 animate-pulse rounded-lg"></div>
+              ) : (
+                <Image
+                  src={product.imageUrl}
+                  alt={product.title}
+                  fill
+                  className="object-cover rounded-lg"
+                  priority={index === 0} // First image loads faster
+                  placeholder="blur"
+                  blurDataURL="data:image/png;base64,iVBORw0KG..."
+                />
+              )}
 
-              {/* Hover effect only on image */}
               {hoveredIndex === index && (
                 <div className="absolute inset-0 flex flex-col justify-center items-center gap-4 bg-gray-900 bg-opacity-40 rounded-lg">
                   <button className="bg-white text-yellow-500 font-bold py-2 px-4 mx-auto">
@@ -73,14 +86,23 @@ function ProductSection() {
               )}
             </div>
 
-            {/* Product details (outside image hover area) */}
-            <h3 className="text-xl font-bold mb-2">{product.name}</h3>
-            <p className="text-gray-600">{product.description}</p>
-            <p className="text-lg font-bold mb-4">{product.price}</p>
+            <h3 className="text-xl font-bold mt-4">{product.title}</h3>
+            <p
+              className="text-gray-600 line-clamp-3 overflow-hidden"
+              style={{
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 2
+              }}
+            >
+              {product.description}
+            </p>
+
+            <p className="text-lg font-bold mb-4">Rp {product.price}</p>
           </div>
         ))}
       </div>
-      
+
       <div className="flex justify-center items-center mt-10 mx-auto">
         <button className="text-white px-4 py-2 rounded-md text-lg font-bold bg-yellow-600 hover:bg-yellow-800 mx-auto">
           Show More
