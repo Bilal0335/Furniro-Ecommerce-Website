@@ -3,6 +3,7 @@ import { client } from "@/sanity/lib/client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Product } from "@/app/interface";
+import Link from "next/link";
 
 async function getData() {
   const query = `  
@@ -68,7 +69,9 @@ function ProductPage() {
                 </div>
               )}
             </div>
+            <Link href={`/shop/${product.slug}`} className="cursor-pointer">
             <h3 className="text-xl font-bold mt-4">{product.title}</h3>
+            </Link>
             <p className="text-gray-600 line-clamp-2 overflow-hidden">
               {product.description}
             </p>
