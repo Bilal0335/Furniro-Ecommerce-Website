@@ -21,13 +21,13 @@ export default function Footer() {
                 <a href="/">Home</a>
               </li>
               <li>
-                <a href="/products">Shop</a>
+                <a href="#">Shop</a>
               </li>
               <li>
-                <a href="/about">About</a>
+                <a href="#">Contact</a>
               </li>
               <li>
-                <a href="/contact">Contact</a>
+                <a href="#">Blog</a>
               </li>
             </ul>
           </div>
@@ -37,13 +37,13 @@ export default function Footer() {
             <h4 className="font-medium text-lg text-[#9F9F9F]">Help</h4>
             <ul>
               <li>
-                <a href="/payment-option">Payment Option</a>
+                <a href="#">Payment Option</a>
               </li>
               <li>
-                <a href="/returns">Returns</a>
+                <a href="#">Returns</a>
               </li>
               <li>
-                <a href="/privacy-policies">Privacy Policies</a>
+                <a href="#">Privacy Policies</a>
               </li>
             </ul>
           </div>
