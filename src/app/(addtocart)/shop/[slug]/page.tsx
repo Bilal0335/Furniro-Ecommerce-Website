@@ -1,156 +1,151 @@
 "use client";
 
+import { IProduct } from "@/app/interface";
 import { Button } from "@/components/ui/button";
+import { client } from "@/sanity/lib/client";
 import { Minus, Plus } from "lucide-react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 
-type IProduct = {
-  id: number;
-  title: string;
-  image?: string[] | StaticImageData | string;
-  slug: string;
-  price: number;
-  category: string;
-  description: string;
-  size: string[];
-  color: string[];
-  qty: number;
-  discount?: number;
+async function getData() {
+  const query = `  
+  *[_type=="product"]{  
+    description,  
+    "imageUrl":productImage.asset->url,  
+    price,  
+    _id,  
+    'slug':slug.current,  
+    dicountPercentage,  
+    isNew,  
+    title  
+  }  
+  `;
+  return await client.fetch(query);
+}
+
+const Description = ({ description }: { description: string }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const toggleReadMore = () => setIsExpanded(!isExpanded);
+
+  return (
+    <div>
+      <p>{isExpanded ? description : `${description.substring(0, 200)}...`}</p>
+      <button onClick={toggleReadMore} className="text-blue-500">
+        {isExpanded ? "Read Less" : "Read More"}
+      </button>
+    </div>
+  );
 };
 
-const products: IProduct[] = [
-  {
-    id: 1,
-    title: "Sytherine",
-    slug: "sytherine",
-    description: "Stylish cafe chair",
-    price: 2500000,
-    image: ["/image/image-1.png"],
-    category: "Furniture",
-    size: ["L", "XL", "XS"],
-    color: ["Blue", "Black", "Brown"],
-    qty: 1,
-    discount: 0,
-  },
-  {
-    id: 2,
-    title: "Chair",
-    slug: "will-executive-chair",
-    description: "Will Executive chair",
-    price: 1500000,
-    image: ["/image/image-2.png"],
-    category: "Furniture",
-    size: ["L", "XL", "XS"],
-    color: ["Blue", "Black", "Brown"],
-    qty: 1,
-    discount: 0,
-  },
-  {
-    id: 3,
-    title: "Lotto",
-    slug: "luxury-big-sofa",
-    description: "Luxury big sofa",
-    price: 7000000,
-    image: ["/image/image-3.png"],
-    category: "Furniture",
-    size: ["L", "XL", "XS"],
-    color: ["Blue", "Black", "Brown"],
-    qty: 1,
-    discount: 0,
-  },
-];
-
-const stars = Array(5)
-  .fill(0)
-  .map((_, index) => <FaStar key={index} />);
-
 const SlugPage = ({ params }: { params: { slug: string } }) => {
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getData();
+      setProducts(data);
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <h1 className="text-gray-500">Loading...</h1>;
+  }
+
   const items = products.find(
-    (p) => p.slug.toLowerCase() === params.slug.toLowerCase()
+    (p: IProduct) => p.slug.toLowerCase() === params.slug.toLowerCase()
   );
 
   if (!items) {
     return <h1 className="text-red-500">Product not found</h1>;
   }
 
-  const productImage =
-    Array.isArray(items.image) && items.image.length > 0
-      ? items.image[0]
-      : "/default-image.png"; // Provide a fallback image
+  const stars = Array(5)
+    .fill(0)
+    .map((_, index) => <FaStar key={index} />);
 
   return (
-    <div className="mt-40 mb-40 flex justify-around items-center">
-      <div className="space-y-3 w-[200px] flex-col justify-center items-center flex">
-        <Image
-          src={productImage}
-          className="w-[70%] rounded-md"
-          alt="image"
-          width={100}
-          height={100}
-        />
-        <Image
-          src={productImage}
-          className="w-[70%] rounded-md"
-          alt="image"
-          width={100}
-          height={100}
-        />
-        <Image
-          src={productImage}
-          className="w-[70%] rounded-md"
-          alt="image"
-          width={100}
-          height={100}
-        />
+    <div className="mt-40 mb-40 flex justify-center items-center space-x-10">
+      {/* Image Gallery */}
+      <div className="space-y-3 w-[120px] flex flex-col justify-center items-center">
+        {[...Array(3)].map((_, index) => (
+          <Image
+            key={index}
+            src={items.imageUrl}
+            className="w-[80px] h-[80px] object-cover rounded-md"
+            alt="image"
+            width={60}
+            height={60}
+          />
+        ))}
       </div>
-      <div className="w-[600px] flex items-center justify-center p-4 bg-white rounded-lg">
+
+      {/* Main Image */}
+      <div className="w-[450px] p-4 bg-white rounded-lg">
         <Image
-          src={productImage}
+          src={items.imageUrl}
           alt="image"
-          width={100}
-          height={100}
-          className="w-[80%] rounded-lg shadow-lg transition-transform duration-300 hover:scale-110"
+          width={350}
+          height={350}
+          className="w-full h-auto object-cover rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
         />
       </div>
 
-      <div className="lg:w-[500px] space-y-2 p-3 sm:p-0 mt-3 sm:mt-0 order-3">
+      {/* Product Details */}
+      <div className="w-[400px] space-y-2 p-3">
         <h1 className="text-xl font-bold lg:text-3xl">{items.title}</h1>
         <p className="flex justify-start items-center text-yellow-400">
           {stars}
         </p>
+
+        {/* Price Section */}
         <div className="flex space-x-3">
           <span className="font-bold">Price: {items.price}</span>
-          {items.discount !== 0 && (
+          {items.dicountPercentage !== 0 && (
             <span className="font-bold line-through text-gray-500">
-              {items.discount}
+              {items.dicountPercentage}
             </span>
           )}
         </div>
-        <p>{items.description}</p>
-        <p className="text-gray-400">Select Color</p>
+
+        {/* Read More / Read Less for Description */}
+        <Description description={items.description} />
+
+        {/* Size Selection */}
+        <p className="text-gray-400">Size</p>
         <div className="space-x-3">
-          <button className="w-[37px] h-[37px] rounded-full bg-red-400"></button>
-          <button className="w-[37px] h-[37px] rounded-full bg-blue-400"></button>
-          <button className="w-[37px] h-[37px] rounded-full bg-yellow-400"></button>
-        </div>
-        <p className="text-gray-400">Select Size</p>
-        <div className="space-x-3">
-          {items.size.map((size) => (
+          {["L", "XL", "XS"].map((size, index) => (
             <button
-              key={size}
-              className="w-[70px] h-[37px] rounded-[16px] bg-gray-500"
+              key={index}
+              className="w-[50px] h-[45px] rounded-[6px] bg-[#F9F1E7] hover:bg-[#B88E2F] transition duration-300 hover:text-white hover:font-semibold"
             >
               {size}
             </button>
           ))}
         </div>
-        {/* Quantity control */}
-        <div className="flex justify-start items-center pt-10">
+
+        {/* Color Selection */}
+        <p className="text-gray-400">Color</p>
+        <div className="space-x-3">
+          {["bg-blue-400", "bg-black", "bg-yellow-700"].map((color, index) => (
+            <button
+              key={index}
+              className={`w-[37px] h-[37px] rounded-full ${color} 
+                hover:ring-2 hover:ring-gray-500 
+                active:scale-90 transition-all duration-200`}
+            ></button>
+          ))}
+        </div>
+
+        {/* Quantity Control */}
+        <div className="flex justify-start items-center pt-3">
           <button className="w-10">
             <Minus />
           </button>
-          <span className="w-4">{items.qty}</span>
+          <span className="w-4">1</span>
           <button className="w-10">
             <Plus />
           </button>

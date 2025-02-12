@@ -23,3 +23,4 @@ export type IProduct = {
   dicountPercentage?: number;
   imageUrl: string;
 };
+
