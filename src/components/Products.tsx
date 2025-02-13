@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { CiHeart, CiShare2, CiSliderHorizontal } from "react-icons/ci";
 import { Product } from "@/app/interface";
+import Link from "next/link";
 
 async function getData() {
   const query = `  
@@ -106,19 +107,21 @@ function ProductSection() {
               )}
             </div>
 
-            <h3 className="text-xl font-bold mt-4">{product.title}</h3>
-            <p
-              className="text-gray-600 line-clamp-3 overflow-hidden"
-              style={{
-                display: "-webkit-box",
-                WebkitBoxOrient: "vertical",
-                WebkitLineClamp: 2
-              }}
-            >
-              {product.description}
-            </p>
+            <Link href={`/shop/${product.slug}`}>
+              <h3 className="text-xl font-bold mt-4">{product.title}</h3>
+              <p
+                className="text-gray-600 line-clamp-3 overflow-hidden"
+                style={{
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: 2
+                }}
+              >
+                {product.description}
+              </p>
 
-            <p className="text-lg font-bold mb-4">Rp {product.price}</p>
+              <p className="text-lg font-bold mb-4">Rp {product.price}</p>
+            </Link>
           </div>
         ))}
       </div>

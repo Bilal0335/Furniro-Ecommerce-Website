@@ -71,11 +71,11 @@ function ProductPage() {
             </div>
             <Link href={`/shop/${product.slug}`} className="cursor-pointer">
             <h3 className="text-xl font-bold mt-4">{product.title}</h3>
-            </Link>
             <p className="text-gray-600 line-clamp-2 overflow-hidden">
               {product.description}
             </p>
             <p className="text-lg font-bold mb-4">Rp {product.price}</p>
+            </Link>
           </div>
         ))}
       </div>
