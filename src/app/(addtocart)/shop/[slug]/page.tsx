@@ -26,6 +26,7 @@ async function getData() {
 
 const Description = ({ description }: { description: string }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
   const toggleReadMore = () => setIsExpanded(!isExpanded);
 
   return (
@@ -41,6 +42,13 @@ const Description = ({ description }: { description: string }) => {
 const SlugPage = ({ params }: { params: { slug: string } }) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [counter, setCounter] = useState(1);
+  const increment = () => {
+    setCounter(counter + 1);
+  };
+  const decrement = () => {
+    if (counter > 0) setCounter(counter - 1);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -142,11 +150,11 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
 
         {/* Quantity Control */}
         <div className="flex justify-start items-center pt-3">
-          <button className="w-10">
+          <button className="w-10" onClick={decrement}>
             <Minus />
           </button>
-          <span className="w-4">1</span>
-          <button className="w-10">
+          <span className="w-4">{counter}</span>
+          <button className="w-10" onClick={increment}>
             <Plus />
           </button>
           <Button>Add to cart</Button>
