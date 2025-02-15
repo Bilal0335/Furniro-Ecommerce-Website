@@ -3,8 +3,10 @@ import { client } from "@/sanity/lib/client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { CiHeart, CiShare2, CiSliderHorizontal } from "react-icons/ci";
-import { Product } from "@/app/interface";
 import Link from "next/link";
+import Swal from "sweetalert2";
+import { addTocart } from "@/app/actions/actions";
+import { IProduct } from "@/app/interface";
 
 async function getData() {
   const query = `  
@@ -23,7 +25,7 @@ async function getData() {
 }
 
 function ProductSection() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [noOfElements, setNoOfElements] = useState(4);
@@ -54,6 +56,22 @@ function ProductSection() {
     });
   }, []);
 
+  // Handle Add to Cart
+  const handleTocart = (e: React.MouseEvent, product: IProduct) => {
+    e.preventDefault();
+    addTocart(product); // Ensure this function is defined elsewhere
+
+    if (typeof window !== "undefined") {
+      Swal.fire({
+        position: "top-right",
+        icon: "success",
+        title: `${product.title} added to cart`,
+        showConfirmButton: false,
+        timer: 1000
+      });
+    }
+  };
+
   return (
     <div className="p-2 px-10 rounded-lg">
       <h2 className="mx-auto py-1 text-3xl font-bold text-center mb-8">
@@ -78,7 +96,7 @@ function ProductSection() {
                   alt={product.title}
                   fill
                   className="object-cover rounded-lg"
-                  priority={index === 0} // First image loads faster
+                  priority={index === 0}
                   placeholder="blur"
                   blurDataURL="data:image/png;base64,iVBORw0KG..."
                 />
@@ -86,7 +104,10 @@ function ProductSection() {
 
               {hoveredIndex === index && (
                 <div className="absolute inset-0 flex flex-col justify-center items-center gap-4 bg-gray-900 bg-opacity-40 rounded-lg">
-                  <button className="bg-white text-yellow-500 font-bold py-2 px-4 mx-auto">
+                  <button
+                    className="bg-white text-yellow-500 font-bold py-2 px-4 mx-auto"
+                    onClick={(e) => handleTocart(e, product)}
+                  >
                     Add to Cart
                   </button>
                   <div className="flex justify-around items-center mx-auto">
