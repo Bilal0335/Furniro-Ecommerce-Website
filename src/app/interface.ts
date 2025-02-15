@@ -22,5 +22,6 @@ export type IProduct = {
   qty?: number;
   dicountPercentage?: number;
   imageUrl: string;
+  inventory:number
 };
 
