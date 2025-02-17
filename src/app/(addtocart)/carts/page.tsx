@@ -62,10 +62,10 @@ const Cart = () => {
               src={item.imageUrl}
               alt={item.title}
               className="w-full h-52 object-cover rounded-md"
-              width={3393}  // Replace with actual image width
-              height={5090} // Replace with actual image height
-              placeholder="blur" // Enables placeholder functionality
-              blurDataURL="/path/to/your/placeholder.jpg" // Provide a placeholder URL or base64-encoded image
+              width={3393}  
+              height={5090} 
+              placeholder="blur" 
+              blurDataURL="/path/to/your/placeholder.jpg" 
             />
             <h2 className="text-xl font-semibold mt-2">{item.title}</h2>
             <div className="flex justify-between items-center mt-4">
@@ -97,12 +97,10 @@ const Cart = () => {
         ))}
       </div>
 
-      {/* ✅ Show Total Price at the Bottom */}
       {cartItem.length > 0 && (
         <div className="text-center mt-6">
           <p className="text-2xl font-bold">Total Price: ${calculateTotalPrice()}</p>
 
-          {/* ✅ Proceed to Checkout Button */}
           <button 
             onClick={handleProceedToCheckout} 
             className="mt-4 px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-700"

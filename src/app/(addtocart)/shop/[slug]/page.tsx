@@ -72,7 +72,6 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
 
   const handleTocart = (e: React.MouseEvent, product: IProduct) => {
     e.preventDefault();
-    // Add product to cart logic here (Replace with your cart function)
     console.log("Added to cart:", product);
 
     if (typeof window !== "undefined") {
