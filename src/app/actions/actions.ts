@@ -1,4 +1,4 @@
-import { IProduct, Product } from '../interface'
+import { IProduct } from '../interface'
 
 export const addTocart = (product: IProduct) => {
   const cart: IProduct[] = JSON.parse(localStorage.getItem('cart') || '[]')
@@ -28,9 +28,9 @@ export const updateCartQuantity = (product: string, quantity: number) => {
   const productIndex = cart.findIndex(item => item._id === product)
   if (productIndex > -1) {
     cart[productIndex].inventory = quantity
-    // localStorage.setItem('cart', JSON.stringify(cart))
+    localStorage.setItem('cart', JSON.stringify(cart))
   }
 }
-export const getCartItem = (): Product[] => {
+export const getCartItem = (): IProduct[] => {
   return JSON.parse(localStorage.getItem('cart') || '[]')
 }

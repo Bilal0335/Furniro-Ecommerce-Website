@@ -7,6 +7,7 @@ import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 async function getData() {
   const query = `  
@@ -26,7 +27,6 @@ async function getData() {
 
 const Description = ({ description }: { description: string }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
   const toggleReadMore = () => setIsExpanded(!isExpanded);
 
   return (
@@ -43,12 +43,6 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [counter, setCounter] = useState(1);
-  const increment = () => {
-    setCounter(counter + 1);
-  };
-  const decrement = () => {
-    if (counter > 0) setCounter(counter - 1);
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -63,17 +57,38 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
     return <h1 className="text-gray-500">Loading...</h1>;
   }
 
-  const items = products.find(
+  const item = products.find(
     (p: IProduct) => p.slug.toLowerCase() === params.slug.toLowerCase()
   );
 
-  if (!items) {
+  if (!item) {
     return <h1 className="text-red-500">Product not found</h1>;
   }
 
+  const increment = () => setCounter(counter + 1);
+  const decrement = () => {
+    if (counter > 1) setCounter(counter - 1);
+  };
+
+  const handleTocart = (e: React.MouseEvent, product: IProduct) => {
+    e.preventDefault();
+    // Add product to cart logic here (Replace with your cart function)
+    console.log("Added to cart:", product);
+
+    if (typeof window !== "undefined") {
+      Swal.fire({
+        position: "top-right",
+        icon: "success",
+        title: `${product.title} added to cart`,
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
+  };
+
   const stars = Array(5)
     .fill(0)
-    .map((_, index) => <FaStar key={index} />);
+    .map((_, index) => <FaStar key={index} className="text-yellow-400" />);
 
   return (
     <div className="mt-40 mb-40 flex justify-center items-center space-x-10">
@@ -82,11 +97,11 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
         {[...Array(3)].map((_, index) => (
           <Image
             key={index}
-            src={items.imageUrl}
+            src={item.imageUrl}
             className="w-[80px] h-[80px] object-cover rounded-md"
-            alt="image"
-            width={60}
-            height={60}
+            alt="Product Thumbnail"
+            width={80}
+            height={80}
           />
         ))}
       </div>
@@ -94,8 +109,8 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
       {/* Main Image */}
       <div className="w-[450px] p-4 bg-white rounded-lg">
         <Image
-          src={items.imageUrl}
-          alt="image"
+          src={item.imageUrl}
+          alt="Product Image"
           width={350}
           height={350}
           className="w-full h-auto object-cover rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
@@ -104,23 +119,21 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
 
       {/* Product Details */}
       <div className="w-[400px] space-y-2 p-3">
-        <h1 className="text-xl font-bold lg:text-3xl">{items.title}</h1>
-        <p className="flex justify-start items-center text-yellow-400">
-          {stars}
-        </p>
+        <h1 className="text-xl font-bold lg:text-3xl">{item.title}</h1>
+        <p className="flex justify-start items-center">{stars}</p>
 
         {/* Price Section */}
         <div className="flex space-x-3">
-          <span className="font-bold">Price: {items.price}</span>
-          {items.dicountPercentage !== 0 && (
+          <span className="font-bold">Price: ${item.price}</span>
+          {item.dicountPercentage !== 0 && (
             <span className="font-bold line-through text-gray-500">
-              {items.dicountPercentage}
+              ${item.dicountPercentage}
             </span>
           )}
         </div>
 
         {/* Read More / Read Less for Description */}
-        <Description description={items.description} />
+        <Description description={item.description} />
 
         {/* Size Selection */}
         <p className="text-gray-400">Size</p>
@@ -157,7 +170,7 @@ const SlugPage = ({ params }: { params: { slug: string } }) => {
           <button className="w-10" onClick={increment}>
             <Plus />
           </button>
-          <Button>Add to cart</Button>
+          <Button onClick={(e) => handleTocart(e, item)}>Add to cart</Button>
         </div>
       </div>
     </div>

@@ -68,7 +68,7 @@ export default function Header() {
         <IoIosHeartEmpty className="text-3xl hidden lg:block cursor-pointer" />
 
         {/* Cart Icon */}
-        <Link href="/cart" className="relative hidden lg:block">
+        <Link href="/carts" className="relative hidden lg:block">
           <IoCartOutline className="text-3xl cursor-pointer" />
           {cart.length > 0 && (
             <span className="absolute top-[-5px] right-0 bg-red-400 rounded-full text-white w-[20px] h-[20px] flex justify-center items-center p-1 text-sm">
